@@ -1,0 +1,38 @@
+
+#include <frc/Encoder.h>
+#include <frc/Joystick.h>
+#include <frc/PWMVictorSPX.h>
+#include <frc/TimedRobot.h>
+#include <frc/smartdashboard/SmartDashboard.h>
+
+constexpr double senPi = 3.14159265358979;
+
+
+class Robot : public frc::TimedRobot {
+ public:
+  
+  void TeleopPeriodic() override { m_m0a.Set(Control.GetRawAxis(1)); }
+  void TeleopPeriodic() override { m_m0b.Set(Control.GetRawAxis(1)); }
+  void TeleopPeriodic() override { m_m1a.Set(Control.GetRawAxis(1)); }
+  void TeleopPeriodic() override { m_m1b.Set(Control.GetRawAxis(1)); }
+
+  void RobotPeriodic() override {
+    frc::SmartDashboard::PutNumber("Encoder 0", DriveEncoder0.GetDistance());
+    frc::SmartDashboard::PutNumber("Encoder 1", m_encoder1.GetDistance());
+  }
+
+  void RobotInit() override {
+    DriveEncoder0.SetDistancePerPulse((senPi * 6) / 360.0);
+    DriveEncoder1.SetDistancePerPulse((senPi * 6) / 360.0);
+  }
+
+ private:
+  frc::Joystick Control{0};
+  frc::CANTalonSRX m_m0a{CAN};
+  frc::CANVictorSPX m_m0b{CAN};
+  frc::CANTalonSRX m_m1a{CAN};
+  frc::CANVictorSPX m_m1b{CAN};
+  frc::Encoder DriveEncoder0{CAN_0};
+  frc::Encoder DriveEncoder1{CAN_1};
+
+};
